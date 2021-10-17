@@ -3,12 +3,17 @@ import { getTeachers, getTeacherById, createTeacher, updateTeacher, deleteTeache
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.send("hello there")
+})
+
+
 /**
  * @swagger
  * /teachers:
  *  get:
  *    summary: Get All Teachers
- *    tags: [Teacher]      
+ *    tags: [Teacher]
 */
 router.get('/teachers', getTeachers);
 
@@ -101,7 +106,7 @@ router.delete('/teachers/:id', deleteTeacher);
  *       propterty:
  *        courseId: string
  *        description: id of the course
- *       example: 
+ *       example:
  *        courseId: 1
 */
 router.post('/teachers/:id', addCourseToTeacher);
@@ -134,7 +139,7 @@ export default router;
  *         isRector:
  *           type: boolean
  *           description: Is Teacher a rector?
- *       example:   
+ *       example:
  *         fullName: Albert Einstein
  *         isRector: 0
  */
