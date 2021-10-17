@@ -9,6 +9,9 @@ import CourseService from '../services/CourseService.js';
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+    res.send("Hello There!")
+})
 router.use(TeacherRoutes);
 router.use(StudentRoutes);
 router.use(CourseRoutes);

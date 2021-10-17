@@ -3,10 +3,6 @@ import { getTeachers, getTeacherById, createTeacher, updateTeacher, deleteTeache
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send("hello there")
-})
-
 
 /**
  * @swagger
