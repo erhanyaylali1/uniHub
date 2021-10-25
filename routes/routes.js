@@ -19,6 +19,6 @@ router.use(CourseRoutes);
 const teacherService = new TeacherService();
 const studentService = new StudentService();
 const courseService = new CourseService();
-export { teacherService, studentService, courseService }
+export { teacherService, studentService, courseService };
 
 export default router;

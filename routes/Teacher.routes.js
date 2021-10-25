@@ -3,13 +3,18 @@ import { getTeachers, getTeacherById, createTeacher, updateTeacher, deleteTeache
 
 const router = express.Router();
 
-
 /**
  * @swagger
  * /teachers:
  *  get:
  *    summary: Get All Teachers
- *    tags: [Teacher]
+ *    tags: [Teacher]  
+ *    responses:
+ *     200:
+ *      description: Get All Teachers. 
+ *     500:
+ *       description: Interval Server Error.
+
 */
 router.get('/teachers', getTeachers);
 
@@ -25,6 +30,11 @@ router.get('/teachers', getTeachers);
  *    - in: path
  *      name: id
  *      required: true
+ *   responses:
+ *    200:
+ *      description: Get Teacher By Id.
+ *    404:
+ *       description: Not Found.
 */
 router.get('/teachers/:id', getTeacherById);
 
@@ -42,6 +52,11 @@ router.get('/teachers/:id', getTeacherById);
  *     application/json:
  *      schema:
  *       $ref: '#/components/schemas/Teacher'
+ *   responses:
+ *    201:
+ *      description: Succesfully Created.
+ *    400:
+ *       description: Bad Request.
 */
 router.post('/teachers', createTeacher);
 
@@ -63,6 +78,11 @@ router.post('/teachers', createTeacher);
  *     application/json:
  *      schema:
  *       $ref: '#/components/schemas/Teacher'
+ *   responses:
+ *    201:
+ *      description: Succesfully Created.
+ *    400:
+ *       description: Bad Request.
 */
 router.put('/teachers/:id', updateTeacher);
 
@@ -78,6 +98,11 @@ router.put('/teachers/:id', updateTeacher);
  *    - in: path
  *      name: id
  *      required: true
+ *   responses:
+ *    200:
+ *      description: Succesfully Deleted.
+ *    404:
+ *       description: Not Found.
 */
 router.delete('/teachers/:id', deleteTeacher);
 
@@ -102,8 +127,13 @@ router.delete('/teachers/:id', deleteTeacher);
  *       propterty:
  *        courseId: string
  *        description: id of the course
- *       example:
+ *       example: 
  *        courseId: 1
+ *   responses:
+ *    200:
+ *      description: Succesfully Added.
+ *    404:
+ *       description: Not Found.
 */
 router.post('/teachers/:id', addCourseToTeacher);
 
@@ -135,7 +165,23 @@ export default router;
  *         isRector:
  *           type: boolean
  *           description: Is Teacher a rector?
- *       example:
+ *         phone:
+ *           type: string
+ *           description: phone number of the student
+ *         email:
+ *           type: string
+ *           description: email of the student
+ *         teacherNumber:
+ *           type: string
+ *           description: student number of the student
+ *         password:
+ *           type: string
+ *           description: password of the student
+ *       example:   
  *         fullName: Albert Einstein
  *         isRector: 0
+ *         email: nikolatesla@gmail.com
+ *         phone: 23482384238
+ *         teacherNumber: 23423432
+ *         password: deneme123
  */

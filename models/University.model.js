@@ -1,37 +1,32 @@
 export default function CourseModel(sequelize, DataTypes) {
 
-    const Course = sequelize.define('Course', {
+    const University = sequelize.define('University', {
         id: {
             primaryKey: true,
             type: DataTypes.DOUBLE,
             autoIncrement: true,
         },
-        crn: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true
         },
-        courseName: {
+        phone: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
-        zoomLink: {
+        address: {
             type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
         },
-        day: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        duration: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        startTime: {
-            type: DataTypes.STRING,
-            allowNull: false
+        foundationYear: {
+            type: DataTypes.DOUBLE,
+            allowNull: true,
         }
     },{
       freezeTableName: true
     });  
-    return Course;
+    return University;
 };

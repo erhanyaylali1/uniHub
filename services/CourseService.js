@@ -13,16 +13,26 @@ class CourseService {
         return this.course.findAll();
     }
 
-    getCourseById = (id) => {
-        return this.course.findByPk(id);
+    getCourseById = async (id) => {
+        const course = await this.course.findByPk(id);
+        if(course === null){
+            throw new Error("Course Not Found");
+        } else {
+            return course;
+        }
     }
   
-    getStudentsByCourseId = (id) => {
-        return this.course.findByPk(id, {
+    getStudentsByCourseId = async (id) => {
+        const course = await this.course.findByPk(id, {
             include: [ 
                 { model: studentService.student, as: 'Students' }
             ]
         });
+        if(course === null){
+            throw new Error("Course Not Found");
+        } else {
+            return course;
+        }
     }
 }
 

@@ -7,7 +7,7 @@ export const createCourse = async (req, res) => {
         service.createCourse(req.body);
         res.status(201).send("Course has created successfully!");
     } catch (err) {
-        console.log(err);
+        res.status(400).send(err.message);
     }
 }
 
@@ -16,7 +16,7 @@ export const getAllCourses = async (req, res) => {
         const courses = await service.getAllCourses();
         res.status(200).send(courses);
     } catch (err) {
-        console.log(err);
+        res.status(500).send(err.message);
     }
 }
 
@@ -25,8 +25,7 @@ export const getCourseById = async (req, res) => {
         const course = await service.getCourseById(req.params.id);
         res.status(200).send(course);
     } catch (err) {
-        res.status(404).send("Course not found!");
-        console.log(err);
+        res.status(404).send(err.message);
     }
 }
 
@@ -35,6 +34,6 @@ export const getStudentsByCourseId = async (req, res) => {
         const students = await service.getStudentsByCourseId(req.params.id);
         res.status(200).send(students);
     } catch (err) {
-        console.log(err);
+        res.status(404).send(err.message);
     }
 }

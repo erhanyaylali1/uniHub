@@ -6,37 +6,62 @@ class TeacherService {
     teacher = db.Teacher;
 
     createTeacher = (teacher) => {
-        this.teacher.create(teacher);
+        try {
+            this.teacher.create(teacher);
+        } catch (err) {
+            throw new Error(err.message);
+        }
     }
 
     getAllTeachers = () => {
-        return this.teacher.findAll();
+        try {
+            return this.teacher.findAll();
+        } catch (err) {
+            throw new Error(err.message);
+        }
     }
 
-    getTeacherById = (id) => {
-        return this.teacher.findByPk(id, {
+    getTeacherById = async (id) => {
+        const teacher = await this.teacher.findByPk(id, {
             include: [
-                { model: courseService.course, as: 'course' }
+                { model: courseService.course, as: 'courses' }
             ]
         });
+        if(teacher === null) {
+            throw new Error("Teacher Not Found!");
+        } else {
+            return teacher;
+        }
     }
 
     updateTeacherById = (id, teacher) => {
-        this.teacher.update(teacher, {
-            where: { id }
-        });
+        try {
+            this.teacher.update(teacher, {
+                where: { id }
+            });
+        } catch (err) {
+            throw new Error(err.message);
+        }
     }
 
     deleteTeacherById = (id) => {
-        this.teacher.destroy({
-            where: { id }
-        });
+        try {
+            this.teacher.destroy({
+                where: { id }
+            });
+        } catch (err) {
+            throw new Error(err.message);
+        }        
     }
   
     addCourseToTheTeacher = async (courseBody, teacherId) => {
-        const teacher = await this.getTeacherById(teacherId);
-        const course = await courseService.createCourse(courseBody);
-        await teacher.addCourse(course);
+        try {
+            const teacher = await this.getTeacherById(teacherId);
+            const course = await courseService.createCourse(courseBody);
+            await teacher.addCourse(course);
+        } catch (err) {
+            throw new Error(err.message);
+        }
     }
 
 }
