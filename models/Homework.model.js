@@ -7,20 +7,16 @@ export default function CourseModel(sequelize, DataTypes) {
             autoIncrement: true,
         },
         homeworkName: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
+            type: DataTypes.STRING,
         },
         type: {
             type: DataTypes.INTEGER,
-            allowNull: false,
         },
-        file: {
+        filePath: {
             type: DataTypes.STRING,
-            allowNull: true,
         },
         deadLine: {
-            type: DataTypes.DATE,
-            allowNull: true,
+            type: DataTypes.STRING,
         }
     },{
       freezeTableName: true

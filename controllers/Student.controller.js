@@ -47,13 +47,3 @@ export const deleteStudent = async (req, res) => {
         res.status(404).send(err.message);
     }
 }
-
-export const addCourseToStudent = async (req, res) => {
-    try {
-        await service.addCourseToStudent(req.params.id, req.body.courseId);
-        res.status(201).json({ "message": "Student Has Enrolled To The Course!" });
-    }
-    catch (err) {
-        res.status(400).send(err.message);
-    }
-}

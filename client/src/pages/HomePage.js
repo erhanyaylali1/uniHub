@@ -1,16 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import AddHomeworkToCourse from '../components/AddHomeworkToCourse';
 
-const HomePage = () => {
+
+const Home = () => {
 
     return (
-        <div>
-           Home Page
-           <Link to="teachers/2">
-               GO
-           </Link>
+        <div style={{ padding: 50 }}>
+            <AddHomeworkToCourse />
         </div>
     )
 }
 
-export default HomePage
+export default Home

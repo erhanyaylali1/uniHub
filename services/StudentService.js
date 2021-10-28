@@ -22,11 +22,7 @@ class StudentService {
     }
 
     getStudentById = async (id) => {
-        const student = await this.student.findByPk(id, {
-            include: [
-                { model: courseService.course }
-            ]
-        });
+        const student = await this.student.findByPk(id);
         if(student === null){
             throw new Error("Student not found.");
         } else {
@@ -50,25 +46,6 @@ class StudentService {
         }
     }
 
-    addCourseToStudent = async (studentId, courseId) => {
-
-        const student = await this.getStudentById(studentId);
-        const course = await courseService.getCourseById(courseId);
-
-        if(student === null){
-            throw new Error("Student Not Found!");
-        } else if (course === null) {
-            throw new Error("Course Not Found!");
-        }
-
-        try {
-            await student.addCourse(course);
-            await course.addStudent(student);
-        } catch (err) {
-            throw new Error(err.message);
-        }
-    }
-  
 }
 
 export default StudentService;

@@ -1,5 +1,5 @@
 import express from "express";
-import { getStudents, getStudentById, createStudent, updateStudent, deleteStudent, addCourseToStudent } from "../controllers/Student.controller.js";
+import { getStudents, getStudentById, createStudent, updateStudent, deleteStudent } from "../controllers/Student.controller.js";
 
 const router = express.Router();
 
@@ -107,34 +107,6 @@ router.put('/students/:id', updateStudent);
 */
 router.delete('/students/:id', deleteStudent);
 
-/**
- * @swagger
- * /students/{id}:
- *  post:
- *   summary: Add Course To Student
- *   tags: [Student]
- *   parameters:
- *    - in: path
- *      name: id
- *      required: true
- *   requestBody:
- *    required: true
- *    content:
- *     application/json:
- *      schema:
- *       type: object
- *       propterty:
- *        courseId: string
- *        description: id of the course
- *       example: 
- *        courseId: 1
- *   responses:
- *    201:
- *      description: Succesfully Added.
- *    404:
- *       description: Not Found.
-*/
-router.post('/students/:id', addCourseToStudent);
 
 
 export default router;
@@ -164,24 +136,8 @@ export default router;
  *           description: Full name of student
  *         gpa:
  *           type: double
- *           description: GPA of the student
- *         phone:
- *           type: string
- *           description: phone number of the student
- *         email:
- *           type: string
- *           description: email of the student
- *         studentNumber:
- *           type: string
- *           description: student number of the student
- *         password:
- *           type: string
- *           description: password of the student
+ *           description: GPA of the sudent
  *       example:
- *         fullName: Nikola Tesla
+ *         fullName: Nikola Tesle
  *         gpa: 3.65
- *         email: nikolatesla@gmail.com
- *         phone: 23482384238
- *         studentNumber: 23423432
- *         password: deneme123
  */

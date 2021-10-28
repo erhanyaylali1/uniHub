@@ -123,12 +123,7 @@ router.delete('/teachers/:id', deleteTeacher);
  *    content:
  *     application/json:
  *      schema:
- *       type: object
- *       propterty:
- *        courseId: string
- *        description: id of the course
- *       example: 
- *        courseId: 1
+ *       $ref: '#/components/schemas/Course'
  *   responses:
  *    200:
  *      description: Succesfully Added.
@@ -165,23 +160,7 @@ export default router;
  *         isRector:
  *           type: boolean
  *           description: Is Teacher a rector?
- *         phone:
- *           type: string
- *           description: phone number of the student
- *         email:
- *           type: string
- *           description: email of the student
- *         teacherNumber:
- *           type: string
- *           description: student number of the student
- *         password:
- *           type: string
- *           description: password of the student
  *       example:   
  *         fullName: Albert Einstein
  *         isRector: 0
- *         email: nikolatesla@gmail.com
- *         phone: 23482384238
- *         teacherNumber: 23423432
- *         password: deneme123
  */

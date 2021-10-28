@@ -37,3 +37,33 @@ export const getStudentsByCourseId = async (req, res) => {
         res.status(404).send(err.message);
     }
 }
+
+export const addStudentToCourse = async (req, res) => {
+    try {
+        await service.addStudentToCourse(req.params.id, req.params.studentId);
+        res.status(201).send("Student has successfully enrolled to the course!");
+    } catch (err) {
+        res.status(404).send(err.message);
+    }
+}
+
+export const addHomeworkToTheCourse = async (req, res) => {
+    try {
+        await service.addHomeworkToTheCourse(req.body.teacherId, req.body.courseId, req.body.homework);
+        res.status(201).send("Homework Successfully Created!");
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+}
+
+export const addHomeworkFile = async (req, res) => {
+    try {       
+        const { deadLine, homeworkName, type } = req.body
+        const filePath = req.files[0].path;
+        console.log(deadLine)
+        await service.addHomeworkToTheCourse(req.params.courseId, deadLine, homeworkName, type, filePath);
+        res.status(201).send("Ödev eklendi")
+    } catch (err) {
+        res.status(400).send(err.message)
+    }
+}

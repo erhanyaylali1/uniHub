@@ -20,15 +20,19 @@ const TeacherPage = () => {
     return (
         <Grid className={classes.main} container justifyContent="center" >
             Teacher Page
-            {teacher && (
+            {teacher ? (
                 <React.Fragment>
-                    <Grid item xs={6} md={12}>
+                    <Grid container item xs={6} md={12} justifyContent="center">
                         {teacher.id}
                     </Grid>
-                    <Grid item xs={6} md={12}>
+                    <Grid container item xs={6} md={12} justifyContent="center">
                         {teacher.fullName}
                     </Grid>
                 </React.Fragment>
+            ):(
+                <Grid container justifyContent="center">
+                    Teacher Not Found
+                </Grid>
             )}
         </Grid>
     )

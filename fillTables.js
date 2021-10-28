@@ -53,6 +53,14 @@
 //     isRector: 0,
 // })
 
+// const university = await db.University.findByPk(1);
+// const university2 = await db.University.findByPk(2);
+
+// university.addTeacher(teacher1)
+// university.addTeacher(teacher2)
+// university.addTeacher(teacher3)
+// university2.addTeacher(teacher4)
+
 // const course1 = await db.Course.create({
 //     crn: "12343",
 //     courseName: "Math 101",
@@ -78,6 +86,13 @@
 //     duration: 3,
 //     startTime: "09.30"   
 // })  
+
+// const teacher1 = await db.Teacher.findByPk(1);
+// const teacher2 = await db.Teacher.findByPk(2);
+
+// teacher1.addCourse(course1);
+// teacher1.addCourse(course2);
+// teacher2.addCourse(course3);
 
 // const student1 = db.Student.create({
 //     fullName: "Erhan Yaylalı",

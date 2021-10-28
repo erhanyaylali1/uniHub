@@ -1,8 +1,8 @@
 import express from "express";
-import { getAllCourses, createCourse, getStudentsByCourseId } from "../controllers/Course.controller.js";
+import { getAllCourses, createCourse, getStudentsByCourseId, addStudentToCourse, addHomeworkToTheCourse, addHomeworkFile } from "../controllers/Course.controller.js";
+import multer from 'multer';
 
 const router = express.Router();
-
 
 /**
  * @swagger
@@ -60,6 +60,58 @@ router.get('/courses/:id', getStudentsByCourseId);
 */
 router.post('/courses', createCourse);
 
+/**
+ * @swagger
+ * /courses/{id}/{studentId}:
+ *  post:
+ *   summary: Add Student To Course
+ *   tags: [Course]
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      required: true
+ *    - in: path
+ *      name: studentId
+ *      required: true
+ *   responses:
+ *    201:
+ *     description: Successfully Created. 
+ *    404:
+ *     description: Bad Request.  
+*/
+router.post('/courses/:id/:studentId', addStudentToCourse);
+
+/**
+ * @swagger
+ * /courses/addHomework:
+ *  post:
+ *   summary: Add Homework To Course
+ *   tags: [Course]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/components/schemas/AddHomeworkToCourse'
+ *   responses:
+ *    201:
+ *     description: Successfully Created. 
+ *    400:
+ *     description: Bad Request.  
+*/
+router.post('/courses/addHomework', addHomeworkToTheCourse);
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "uploads/homeworks/")
+    },
+    filename: (req, file, cb) => {
+      cb(null, new Date().toLocaleDateString() + "-" + file.originalname)
+    },
+})
+const upload = multer({ storage: storage })
+router.post('/courses1/:courseId/addHomework', upload.array('files'), addHomeworkFile);
 
 
 
@@ -93,22 +145,59 @@ export default router;
  *           type: double
  *           description: Name of the Course
  *         zoomLink:
- *           type: string
+ *           type: double
  *           description: Zoom Link of the Course
- *         day:
+ *         studentNumber:
  *           type: integer
- *           description: Index of the Course Day
- *         duration:
+ *           description: Number of Student
+ *         capacity:
  *           type: integer
- *           description: Length of Course Hours
- *         startTime:
- *           type: string
- *           description: Start Time of Course
+ *           description: Student Capacity of the Course
  *       example:
  *         crn: 34326
  *         courseName: Software Engineering
- *         zoomLink: ""
- *         day: 1
- *         duration: 3
- *         startTime: 13.30
+ *         capacity: 50
+ * 
+ *     AddHomeworkToCourse:
+ *       type: object
+ *       required:
+ *        - courseId
+ *        - teacherId
+ *        - homework
+ *       properties: 
+ *        courseId:
+ *         type: string
+ *         description: Id of the Course
+ *        teacherId:
+ *         type: string
+ *         description: Id of the Teacher
+ *        homework:
+ *         type: object
+ *         description: Homework File
+ *         required:
+ *          - homeworkName
+ *          - type
+ *          - file
+ *          - deadline
+ *         properties:
+ *          homeworkName:
+ *           type: string
+ *           description: Name of the homework
+ *          type:
+ *           type: string
+ *           description: Type of the homework
+ *          file:
+ *           type: string
+ *           description: File of the homework
+ *          deadline:
+ *           type: string
+ *           description: Deadline of the homework
+ *       example:
+ *        courseId: 124
+ *        teacherId: 11
+ *        file: 
+ *         homeworkName: Homework 1
+ *         type: Homework
+ *         file: C://.....homework1.pdf
+ *         deadline: 24.12.2021
  */

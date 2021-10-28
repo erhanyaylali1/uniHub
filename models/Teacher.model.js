@@ -8,26 +8,21 @@ export default function TeacherModel (sequelize, DataTypes) {
         },
         fullName: {
             type: DataTypes.STRING,
-            allowNull: false
         },
         phone: {
             type: DataTypes.STRING,
             unique: true,
-            allowNull: false
         },
         email: {
             type: DataTypes.STRING,
             unique: true,
-            allowNull: false
         },
         teacherNumber: {
             type: DataTypes.STRING,
             unique: true,
-            allowNull: false
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false
         },
         isRector: {
             type: DataTypes.BOOLEAN,

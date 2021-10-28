@@ -8,26 +8,21 @@ export default function StudentModel (sequelize, DataTypes) {
         },
         fullName: {
             type: DataTypes.STRING,
-            allowNull: false
         },
         phone: {
             type: DataTypes.STRING,
             unique: true,
-            allowNull: false
         },
         email: {
             type: DataTypes.STRING,
             unique: true,
-            allowNull: false
         },
         studentNumber: {
             type: DataTypes.STRING,
             unique: true,
-            allowNull: false
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false
         },
         gpa: {
             type: DataTypes.DOUBLE,

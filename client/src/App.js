@@ -6,7 +6,7 @@ import StudentPage from './pages/StudentPage';
 import TeacherPage from './pages/TeacherPage';
 import './App.css';
 import 'antd/dist/antd.css';
-import 'semantic-ui-css/semantic.min.css'
+import 'semantic-ui-css/semantic.min.css';
 
 function App() {
   return (

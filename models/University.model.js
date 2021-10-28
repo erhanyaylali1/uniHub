@@ -8,22 +8,21 @@ export default function CourseModel(sequelize, DataTypes) {
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
             unique: true
         },
         phone: {
             type: DataTypes.STRING,
-            allowNull: false,
             unique: true
         },
         address: {
             type: DataTypes.STRING,
-            allowNull: false,
-            unique: true
+        },
+        imageUrl: {
+            type: DataTypes.STRING,
+            defaultValue: "https://i.pinimg.com/originals/19/42/08/194208d903f4cd91acc7cb4b818bddf1.png"
         },
         foundationYear: {
             type: DataTypes.DOUBLE,
-            allowNull: true,
         }
     },{
       freezeTableName: true

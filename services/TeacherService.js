@@ -58,7 +58,11 @@ class TeacherService {
         try {
             const teacher = await this.getTeacherById(teacherId);
             const course = await courseService.createCourse(courseBody);
-            await teacher.addCourse(course);
+            if(teacher == null) {
+                throw new Error("Teacher Not Found!");
+            } else {
+                await teacher.addCourse(course);
+            }
         } catch (err) {
             throw new Error(err.message);
         }

@@ -8,27 +8,29 @@ export default function CourseModel(sequelize, DataTypes) {
         },
         crn: {
             type: DataTypes.STRING,
-            allowNull: false,
             unique: true
         },
         courseName: {
-            type: DataTypes.STRING,
-            allowNull: false
+            type: DataTypes.STRING,        
         },
         zoomLink: {
             type: DataTypes.STRING,
         },
         day: {
             type: DataTypes.INTEGER,
-            allowNull: false
         },
         duration: {
             type: DataTypes.INTEGER,
-            allowNull: false
         },
         startTime: {
             type: DataTypes.STRING,
-            allowNull: false
+        },
+        studentNumber: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
+        capacity: {
+            type: DataTypes.INTEGER,
         }
     },{
       freezeTableName: true
