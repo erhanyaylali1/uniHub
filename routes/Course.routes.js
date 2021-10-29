@@ -1,5 +1,6 @@
 import express from "express";
-import { getAllCourses, createCourse, getStudentsByCourseId, addStudentToCourse, addHomeworkToTheCourse, addHomeworkFile } from "../controllers/Course.controller.js";
+import { getAllCourses, createCourse, getStudentsByCourseId, 
+    addStudentToCourse, addHomeworkToTheCourse, addHomeworkFile, addExamToCourse } from "../controllers/Course.controller.js";
 import multer from 'multer';
 
 const router = express.Router();
@@ -110,9 +111,20 @@ const storage = multer.diskStorage({
       cb(null, new Date().toLocaleDateString() + "-" + file.originalname)
     },
 })
-const upload = multer({ storage: storage })
+const upload = multer({ storage: storage });
 router.post('/courses1/:courseId/addHomework', upload.array('files'), addHomeworkFile);
 
+
+const storage2 = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "uploads/exams/")
+    },
+    filename: (req, file, cb) => {
+      cb(null, new Date().toLocaleDateString() + "-" + file.originalname)
+    },
+})
+const upload2 = multer({ storage: storage2 });
+router.post('/courses1/:courseId/addExam', upload2.array('files'), addExamToCourse);
 
 
 export default router;
@@ -123,7 +135,7 @@ export default router;
   * tags:
   *   name: Course
   *   description: The Course managing API
-  */
+*/
 
 /**
  * @swagger

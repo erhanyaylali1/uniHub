@@ -61,8 +61,18 @@ export const addHomeworkFile = async (req, res) => {
         const { deadLine, homeworkName, type } = req.body
         const filePath = req.files[0].path;
         console.log(deadLine)
-        await service.addHomeworkToTheCourse(req.params.courseId, deadLine, homeworkName, type, filePath);
+        await service.addHomeworkToTheCourse(req.params.courseId, deadLine, homeworkName, filePath);
         res.status(201).send("Ödev eklendi")
+    } catch (err) {
+        res.status(400).send(err.message)
+    }
+}
+
+
+export const addExamToCourse = async (req, res) => {
+    try {
+        await service.addExamToTheCourse(req.params.courseId,JSON.parse(req.body.exam), JSON.parse(req.body.questions), req.files);
+        res.status(201).send("Exam Has Successfully Created!");
     } catch (err) {
         res.status(400).send(err.message)
     }

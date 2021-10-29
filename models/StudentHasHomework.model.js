@@ -4,7 +4,7 @@ export default function StudentHasHomeworkModel (sequelize, DataTypes) {
         note: {
             type: DataTypes.DOUBLE
         },
-        file: {
+        filePath: {
             type: DataTypes.STRING
         }
     });

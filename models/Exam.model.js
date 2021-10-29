@@ -1,15 +1,15 @@
-export default function HomeworkModel(sequelize, DataTypes) {
+export default function ExamModel(sequelize, DataTypes) {
 
-    const Homework = sequelize.define('Homework', {
+    const Exam = sequelize.define('Exam', {
         id: {
             primaryKey: true,
             type: DataTypes.DOUBLE,
             autoIncrement: true,
         },
-        homeworkName: {
+        examName: {
             type: DataTypes.STRING,
         },
-        filePath: {
+        startDate: {
             type: DataTypes.STRING,
         },
         deadLine: {
@@ -18,5 +18,5 @@ export default function HomeworkModel(sequelize, DataTypes) {
     },{
       freezeTableName: true
     });  
-    return Homework;
+    return Exam;
 };

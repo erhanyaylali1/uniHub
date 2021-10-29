@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { Upload, message, Button, Input, Form, Radio, DatePicker } from 'antd';
+import { Upload, message, Button, Input, Form, DatePicker } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import axios from '../utils/apiCall'
-import moment from 'moment';
 
 const AddHomeworkToCourse = () => {
 
     const [fileList, setFileList] = useState([]);
     const [uploading, setUploading] = useState(false);
 
-    const handleUpload = (deadLine, homeworkName, type) => {
+    const handleUpload = (deadLine, homeworkName) => {
 
         const formData = new FormData();
         fileList.forEach(file => {
@@ -17,7 +16,6 @@ const AddHomeworkToCourse = () => {
         });
         formData.append('deadLine', deadLine);
         formData.append('homeworkName', homeworkName);
-        formData.append('type', type);
 
         setUploading(true);
         
@@ -48,9 +46,9 @@ const AddHomeworkToCourse = () => {
     };
 
     const handleSubmit = (values) => {
-        const { homeworkName, type } = values;
+        const { homeworkName } = values;
         const deadLine = values.deadLine.format("DD.MM.YYYY");
-        handleUpload(deadLine, homeworkName, type);
+        handleUpload(deadLine, homeworkName);
     }
 
     const download = () => {
@@ -72,14 +70,7 @@ const AddHomeworkToCourse = () => {
                 <Form.Item label="Homework Name" name="homeworkName" required>
                     <Input />
                 </Form.Item>
-                <Form.Item label="Type" name="type" initialValue="0">
-                    <Radio.Group>
-                        <Radio.Button value="0">Homework</Radio.Button>
-                        <Radio.Button value="1">Exam</Radio.Button>
-                        <Radio.Button value="large">Quiz</Radio.Button>
-                    </Radio.Group>
-                </Form.Item>
-                <Form.Item label="Deadline" name="deadLine" initialValue={moment()}>
+                <Form.Item label="Deadline" name="deadLine">
                     <DatePicker />
                 </Form.Item>
                 <Form.Item label="Select File" name="file">  

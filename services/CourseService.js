@@ -59,7 +59,7 @@ class CourseService {
         }
     }
 
-    addHomeworkToTheCourse = async (courseId, deadLine, homeworkName, type, filePath) => {
+    addHomeworkToTheCourse = async (courseId, deadLine, homeworkName, filePath) => {
 
         try {
 
@@ -69,13 +69,30 @@ class CourseService {
                 throw new Error("Course Not Found");
             }
 
-            const homework = await db.Homework.create({ deadLine, homeworkName, type, filePath });
+            const homework = await db.Homework.create({ deadLine, homeworkName, filePath });
             course.addHomework(homework);
 
         } catch (err) {
             throw new Error(err.message);
         }
 
+    }
+
+    addExamToTheCourse = async (courseId, exam, questions, files) => {
+        const examDb = await db.Exam.create({ examName: exam.examName, startDate: exam.date[0], deadLine: exam.date[1] });
+        let counter = 0;
+        questions.map(async (el) => {
+            if(el.image === null) {
+                el.imagePath = ""
+            } else {
+                el.imagePath = files[counter].path;
+                counter += 1;
+            }
+            const question = await db.Question.create(el);
+            examDb.addQuestion(question);
+        })
+        const course = await this.getCourseById(courseId);
+        course.addExam(examDb)
     }
 
 }

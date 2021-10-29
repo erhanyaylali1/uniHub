@@ -11,15 +11,15 @@ export default function TeacherModel (sequelize, DataTypes) {
         },
         phone: {
             type: DataTypes.STRING,
-            unique: true,
+            unique: 'phone',
         },
         email: {
             type: DataTypes.STRING,
-            unique: true,
+            unique: 'email',
         },
         teacherNumber: {
             type: DataTypes.STRING,
-            unique: true,
+            unique: 'teacherNumber',
         },
         password: {
             type: DataTypes.STRING,

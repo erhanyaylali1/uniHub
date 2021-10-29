@@ -8,11 +8,11 @@ export default function CourseModel(sequelize, DataTypes) {
         },
         name: {
             type: DataTypes.STRING,
-            unique: true
+            unique: 'name'
         },
         phone: {
             type: DataTypes.STRING,
-            unique: true
+            unique: 'phone'
         },
         address: {
             type: DataTypes.STRING,
