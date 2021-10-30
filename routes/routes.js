@@ -19,17 +19,15 @@ router.use(TeacherRoutes);
 router.use(StudentRoutes);
 router.use(CourseRoutes);
 router.use(UniversityRoutes);
-router.post('/download', (req, res) => {
-    try{
-        const filePath = path.join(path.resolve(), req.body.path)
-        console.log(filePath)
-        res.download(filePath, function (err) {
-            console.log(err);
-        });
+
+router.get('/uploads/:folder/:fileName', (req, res) => {
+    try {
+        res.sendFile(path.join(path.resolve(), `uploads/${req.params.folder}/` + req.params.fileName));
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(404).send(err.message);
     }
 })
+
 
 const teacherService = new TeacherService();
 const studentService = new StudentService();

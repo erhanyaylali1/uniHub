@@ -58,9 +58,8 @@ export const addHomeworkToTheCourse = async (req, res) => {
 
 export const addHomeworkFile = async (req, res) => {
     try {       
-        const { deadLine, homeworkName, type } = req.body
-        const filePath = req.files[0].path;
-        console.log(deadLine)
+        const { deadLine, homeworkName } = req.body
+        const filePath = req.files[0].filename;
         await service.addHomeworkToTheCourse(req.params.courseId, deadLine, homeworkName, filePath);
         res.status(201).send("Ödev eklendi")
     } catch (err) {
@@ -71,8 +70,28 @@ export const addHomeworkFile = async (req, res) => {
 
 export const addExamToCourse = async (req, res) => {
     try {
+        console.log(JSON.parse(req.body.exam))
         await service.addExamToTheCourse(req.params.courseId,JSON.parse(req.body.exam), JSON.parse(req.body.questions), req.files);
         res.status(201).send("Exam Has Successfully Created!");
+    } catch (err) {
+        res.status(400).send(err.message)
+    }
+}
+
+
+export const getExamById = async (req, res) => {
+    try {
+        const result = await service.getExamById(req.params.examId, req.body.date);
+        res.status(200).send(result) 
+    } catch (err) {
+        res.status(400).send(err.message)
+    }
+}
+
+export const saveExamResultById = async (req, res) => {
+    try {
+        await service.saveExamResult(req.body.studentId, req.body.examId, req.body.point);
+        res.status(201).send("Exam Result successfully Saved!")
     } catch (err) {
         res.status(400).send(err.message)
     }

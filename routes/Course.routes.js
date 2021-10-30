@@ -1,6 +1,6 @@
 import express from "express";
 import { getAllCourses, createCourse, getStudentsByCourseId, 
-    addStudentToCourse, addHomeworkToTheCourse, addHomeworkFile, addExamToCourse } from "../controllers/Course.controller.js";
+    addStudentToCourse, addHomeworkToTheCourse, addHomeworkFile, addExamToCourse, getExamById, saveExamResultById } from "../controllers/Course.controller.js";
 import multer from 'multer';
 
 const router = express.Router();
@@ -126,6 +126,9 @@ const storage2 = multer.diskStorage({
 const upload2 = multer({ storage: storage2 });
 router.post('/courses1/:courseId/addExam', upload2.array('files'), addExamToCourse);
 
+router.post('/courses3/getExam/:examId', getExamById);
+
+router.post('/courses/addExamResult', saveExamResultById);
 
 export default router;
 

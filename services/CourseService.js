@@ -1,5 +1,8 @@
 import db from '../models/Index.js';
-import { studentService, teacherService } from '../routes/routes.js';
+import { studentService } from '../routes/routes.js';
+import moment from 'moment';
+import _ from 'lodash';
+import path from "path";
 
 class CourseService {
 
@@ -85,7 +88,7 @@ class CourseService {
             if(el.image === null) {
                 el.imagePath = ""
             } else {
-                el.imagePath = files[counter].path;
+                el.imagePath = files[counter].filename;
                 counter += 1;
             }
             const question = await db.Question.create(el);
@@ -95,6 +98,50 @@ class CourseService {
         course.addExam(examDb)
     }
 
+    getExamById = async (examId, date) => {
+        const exam = await db.Exam.findByPk(examId, {
+            include: [
+                { model: db.Question, as: 'questions'}
+            ]
+        })
+
+        const currentDate = moment(date, 'DD/MM/YYYY HH:mm:ss');
+        const startDate = moment(exam.startDate, 'DD/MM/YYYY HH:mm:ss');
+        const deadLine = moment(exam.deadLine, 'DD/MM/YYYY HH:mm:ss');
+
+        if(startDate < currentDate && currentDate < deadLine){
+            return exam;
+        } else {
+            const notAvaibleExam = {}
+            notAvaibleExam.id = exam.id;
+            notAvaibleExam.examName = exam.examName;
+            notAvaibleExam.startDate = exam.startDate;
+            notAvaibleExam.deadLine = exam.deadLine;
+            notAvaibleExam.courseId = exam.courseId;
+            
+            return notAvaibleExam;
+        }
+
+    }
+
+    saveExamResult = async (studentId, examId, point) => {
+        console.log(studentId, examId, point)
+        const student = await studentService.getStudentById(studentId);
+        const exam = await db.Exam.findByPk(examId);
+        try{
+            if(student === null){
+                throw new Error("Student Not Found!");
+            } else if (exam === null) {
+                throw new Error("Exam Not Found!");
+            }
+    
+            await student.addExam(exam, { through: { note: point }});
+            await exam.addStudent(student, { through: { note: point }});
+            
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    }
 }
 
 export default CourseService;

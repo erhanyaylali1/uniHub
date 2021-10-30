@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Button, Input, Form, Collapse, DatePicker, message } from 'antd';
-import QuestionCard from './QuestionCard';
+import { Button, Input, Form, Collapse, DatePicker, message, Col, Row } from 'antd';
+import AddQuestionCard from './AddQuestionCard';
 import axios from '../utils/apiCall'
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -15,8 +15,8 @@ const AddQuestionForm = () => {
 
     const handleSubmitExam = (values) => {  
         console.log(values);
-        values.date[0] = values.date[0].format("DD.MM.YYYY hh:mm");
-        values.date[1] = values.date[1].format("DD.MM.YYYY hh:mm");
+        values.date[0] = values.date[0].format("DD.MM.YYYY HH:mm");
+        values.date[1] = values.date[1].format("DD.MM.YYYY HH:mm");
         handleUpload(values)
     }
 
@@ -114,37 +114,45 @@ const AddQuestionForm = () => {
                     <DatePicker.RangePicker format="DD/MM/YYYY HH:mm" showTime={{ format: 'HH:mm' }} />
                 </Form.Item>
                 {questions.length ? (
-                    <Collapse className={classes.collapse}>
-                        {questions.map((el, index) => (
-                            <Panel header={`Question ${index + 1}`} key={index}>
-                                <QuestionCard 
-                                    index={index} 
-                                    question={questions[index]}
-                                    handleQuestionChange={handleQuestionChange} 
-                                    onHandleUpload={onHandleUpload}
-                                    handleChoicesChange={handleChoicesChange}
-                                    handleAnswerChange={handleAnswerChange}
-                                /> 
-                            </Panel>
-                        ))}
-                    </Collapse>
+                    <Col xs={24} md={18} className={classes.questions}>
+                        <Collapse className={classes.collapse}>
+                            {questions.map((el, index) => (
+                                <Panel header={`Question ${index + 1}`} key={index}>
+                                    <AddQuestionCard 
+                                        index={index} 
+                                        question={questions[index]}
+                                        handleQuestionChange={handleQuestionChange} 
+                                        onHandleUpload={onHandleUpload}
+                                        handleChoicesChange={handleChoicesChange}
+                                        handleAnswerChange={handleAnswerChange}
+                                        /> 
+                                </Panel>
+                            ))}
+                        </Collapse>
+                    </Col>
                 ) : null}
                 
 
                 <Form.Item>
-                    <Button
-                        type="secondary"
-                        onClick={addQuestion}
-                        style={{ marginLeft: '28.4%', marginRight: 20 }}
-                    >
-                        Add Question
-                    </Button>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                    >
-                        Submit Exam
-                    </Button>
+                    <Row>
+                        <Col xs={0} md={7}/>
+                        <Col xs={12} md={5} className={classes.button}>
+                            <Button
+                                type="secondary"
+                                onClick={addQuestion}
+                            >
+                                Add Question
+                            </Button>
+                        </Col>
+                        <Col xs={12} md={5} className={classes.button}>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                            >
+                                Submit Exam
+                            </Button>
+                        </Col>
+                    </Row>
                 </Form.Item>
             </Form>
         </div>
@@ -155,7 +163,14 @@ export default AddQuestionForm
 
 const useStyles = makeStyles({
 	collapse: {
-        width: "80%",
         margin: '0 auto 20px auto'
     },
+    button : {
+        display: 'flex',
+        justifyContent: 'center'
+    },
+    questions: {
+        marginLeft: 'auto',
+        marginRight: 'auto'
+    }
 });

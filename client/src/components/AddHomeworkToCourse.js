@@ -52,12 +52,7 @@ const AddHomeworkToCourse = () => {
     }
 
     const download = () => {
-        axios('/download', {
-            method: 'post',
-            data: {
-                path: "uploads/homeworks/28.10.2021-GR10-ProjectPlan-050121-2024-34.pdf",
-            }
-        }).catch(err => console.log(err))
+        axios.get('/uploads/homeworks/30.10.2021-transkript.pdf')
     }
 
     return (
