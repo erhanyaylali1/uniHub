@@ -14,6 +14,9 @@ export default function ExamModel(sequelize, DataTypes) {
         },
         deadLine: {
             type: DataTypes.STRING,
+        },
+        weight: {
+            type: DataTypes.INTEGER
         }
     },{
       freezeTableName: true

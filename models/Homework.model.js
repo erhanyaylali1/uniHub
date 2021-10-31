@@ -14,6 +14,9 @@ export default function HomeworkModel(sequelize, DataTypes) {
         },
         deadLine: {
             type: DataTypes.STRING,
+        },
+        weight: {
+            type: DataTypes.INTEGER
         }
     },{
       freezeTableName: true
