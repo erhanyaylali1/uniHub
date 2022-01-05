@@ -15,10 +15,14 @@ const router = express.Router();
 router.get('/', (req, res) => {
     res.send("Hello There!")
 })
-router.use(TeacherRoutes);
-router.use(StudentRoutes);
-router.use(CourseRoutes);
-router.use(UniversityRoutes);
+
+router.get('/uploads/:folder/:folder2/:fileName', (req, res) => {
+    try {
+        res.sendFile(path.join(path.resolve(), `uploads/${req.params.folder}/${req.params.folder2}/` + req.params.fileName));
+    } catch (err) {
+        res.status(404).send(err.message);
+    }
+})
 
 router.get('/uploads/:folder/:fileName', (req, res) => {
     try {
@@ -28,6 +32,10 @@ router.get('/uploads/:folder/:fileName', (req, res) => {
     }
 })
 
+router.use(TeacherRoutes);
+router.use(StudentRoutes);
+router.use(CourseRoutes);
+router.use(UniversityRoutes);
 
 const teacherService = new TeacherService();
 const studentService = new StudentService();

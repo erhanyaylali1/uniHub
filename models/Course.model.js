@@ -25,12 +25,19 @@ export default function CourseModel(sequelize, DataTypes) {
         startTime: {
             type: DataTypes.STRING,
         },
-        studentNumber: {
+        studentCount: {
             type: DataTypes.INTEGER,
             defaultValue: 0
         },
         capacity: {
             type: DataTypes.INTEGER,
+        },
+        price: {
+            type: DataTypes.INTEGER,
+        },
+        isFinished: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         }
     },{
       freezeTableName: true

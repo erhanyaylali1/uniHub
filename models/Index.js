@@ -14,7 +14,8 @@ import StudentHasExamModel from "./StudentHasExam.model.js";
 const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
     host: config.HOST,
     dialect: config.dialect,
-    pool: config.pool
+    pool: config.pool,
+    logging: false
 });
 
 const db = {};
@@ -57,7 +58,6 @@ db.Question.belongsTo(db.Exam, { foreingKey: 'examId' });
 db.Exam.belongsToMany(db.Student, { through: db.StudentHasExam });
 db.Student.belongsToMany(db.Exam, { through: db.StudentHasExam });
 
-
-await db.sequelize.sync();
+await db.sequelize.sync({ alter: false, force: false });
 
 export default db;

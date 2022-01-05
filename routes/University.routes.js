@@ -1,30 +1,29 @@
 import express from "express";
-import { getAllUniversities, getUniversityById, createUniversity, addTeacherToUniversity } from "../controllers/University.controller.js";
+import UniversityControllerImpl from "../controllers/University.controller.js";
+
 
 const router = express.Router();
-
+const UniversityController = new UniversityControllerImpl();
 
 /**
  * @swagger
- * /universities:
+ * /teachers:
  *  get:
- *    summary: Get All Courses
+ *    summary: Get All Universities
  *    tags: [University]    
  *    responses:
  *     200:
- *      description: Get All Universities. 
+ *      description: Get All Universities.
  *     500:
  *      description: Interval Server Error.   
 */
-router.get('/universities', getAllUniversities);
-
-
+router.get('/universities', UniversityController.getAllUniversities);
 
 /**
  * @swagger
  * /universities/{id}:
  *  get:
- *   summary: Get Course By Id
+ *   summary: Get University By Id
  *   tags: [University]
  *   parameters:
  *    - in: path
@@ -36,13 +35,11 @@ router.get('/universities', getAllUniversities);
  *    404:
  *     description: Not Found.   
 */
-router.get('/universities/:id', getUniversityById);
-
-
+router.get('/universities/:id', UniversityController.getUniversityById);
 
 /**
  * @swagger
- * /universities:
+ * /teachers:
  *  post:
  *   summary: Create University
  *   tags: [University]
@@ -54,18 +51,17 @@ router.get('/universities/:id', getUniversityById);
  *       $ref: '#/components/schemas/University'
  *   responses:
  *    201:
- *     description: Successfully Created. 
+ *     description: University Created. 
  *    400:
- *     description: Bad Request.  
+ *     description: Bad Ruquest.   
 */
-router.post('/universities', createUniversity);
-
+router.post('/universities', UniversityController.createUniversity);
 
 /**
  * @swagger
  * /universities/{universityId}/{teacherId}:
- *  post:
- *   summary: Add Teacher To The University.
+ *  get:
+ *   summary: Add Teacher To University
  *   tags: [University]
  *   parameters:
  *    - in: path
@@ -76,53 +72,12 @@ router.post('/universities', createUniversity);
  *      required: true
  *   responses:
  *    201:
- *     description: Add Teacher To The University. 
+ *     description: Teacher Added to University. 
  *    404:
  *     description: Not Found.   
 */
-router.post('/universities/:universityId/:teacherId', addTeacherToUniversity);
+router.post('/universities/:universityId/:teacherId', UniversityController.addTeacherToUniversity);
+
 
 
 export default router;
-
-
-/**
-  * @swagger
-  * tags:
-  *   name: University
-  *   description: The University managing API
-  */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     University:
- *       type: object
- *       required:
- *         - name
- *         - phone
- *         - address
- *         - foundationYear
- *       properties:
- *         id:
- *           type: string
- *           description: Id of the University
- *         name:
- *           type: string
- *           description: Name of the University
- *         phone:
- *           type: string
- *           description: Phone Number of the University
- *         address:
- *           type: double
- *           description: Address of the University
- *         foundationYear:
- *           type: integer
- *           description: Foundation Year of the University
- *       example:
- *         name: Istanbul Technical University
- *         phone: 0 212 285 30 30
- *         address: Maslak, 34467 Sarıyer/İstanbul
- *         foundationYear: 1773
- */

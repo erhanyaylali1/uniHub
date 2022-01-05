@@ -27,6 +27,10 @@ export default function TeacherModel (sequelize, DataTypes) {
         isRector: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
+        },
+        isAssigned: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     },{
       freezeTableName: true

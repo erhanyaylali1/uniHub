@@ -1,24 +1,23 @@
 import express from "express";
-import { getStudents, getStudentById, createStudent, updateStudent, deleteStudent } from "../controllers/Student.controller.js";
+import StudentControllerImpl from "../controllers/Student.controller.js";
+
 
 const router = express.Router();
-
+const StudentController = new StudentControllerImpl();
 
 /**
  * @swagger
  * /students:
  *  get:
  *    summary: Get All Students
- *    tags: [Student] 
+ *    tags: [Student]    
  *    responses:
  *     200:
- *      description: Get All Students. 
+ *      description: Get All Students.
  *     500:
- *       description: Interval Server Error.     
+ *      description: Interval Server Error.   
 */
-router.get('/students', getStudents);
-
-
+router.get('/students', StudentController.getStudents);
 
 /**
  * @swagger
@@ -32,13 +31,31 @@ router.get('/students', getStudents);
  *      required: true
  *   responses:
  *    200:
- *      description: Get Student By Id.
+ *     description: Get Student By Id. 
  *    404:
- *       description: Not Found.
+ *     description: Not Found.   
 */
-router.get('/students/:id', getStudentById);
+router.get('/students/:id', StudentController.getStudentById);
 
-
+/**
+ * @swagger
+ * /students/login:
+ *  post:
+ *   summary: Login Student
+ *   tags: [Students]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/components/schemas/Student'
+ *   responses:
+ *    200:
+ *     description: Student Found. 
+ *    400:
+ *     description: Bad Ruquest.   
+*/
+router.post('/students/login', StudentController.getStudentLogin);
 
 
 /**
@@ -55,24 +72,18 @@ router.get('/students/:id', getStudentById);
  *       $ref: '#/components/schemas/Student'
  *   responses:
  *    201:
- *      description: Succesfully Created.
+ *     description: Student Created. 
  *    400:
- *       description: Bad Request.
+ *     description: Bad Ruquest.   
 */
-router.post('/students', createStudent);
-
-
+router.post('/students', StudentController.createStudent);
 
 /**
  * @swagger
- * /students/{id}:
+ * /students:
  *  put:
- *   summary: Update Student By Id
+ *   summary: Update a Student
  *   tags: [Student]
- *   parameters:
- *    - in: path
- *      name: id
- *      required: true
  *   requestBody:
  *    required: true
  *    content:
@@ -81,13 +92,11 @@ router.post('/students', createStudent);
  *       $ref: '#/components/schemas/Student'
  *   responses:
  *    201:
- *      description: Succesfully Updated.
- *    404:
- *       description: Not Found.
+ *     description: Student Updated. 
+ *    400:
+ *     description: Bad Ruquest.   
 */
-router.put('/students/:id', updateStudent);
-
-
+router.put('/students/:id', StudentController.updateStudent);
 
 /**
  * @swagger
@@ -101,43 +110,12 @@ router.put('/students/:id', updateStudent);
  *      required: true
  *   responses:
  *    200:
- *      description: Succesfully Deleted.
+ *     description: Student Deleted. 
  *    404:
- *       description: Not Found.
+ *     description: Not Found.   
 */
-router.delete('/students/:id', deleteStudent);
+router.delete('/students/:id', StudentController.deleteStudent);
 
 
 
 export default router;
-
-
-/**
-  * @swagger
-  * tags:
-  *   name: Student
-  *   description: The Student managing API
-  */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Student:
- *       type: object
- *       required:
- *         - fullName
- *       properties:
- *         id:
- *           type: string
- *           description: Id of the student
- *         fullName:
- *           type: string
- *           description: Full name of student
- *         gpa:
- *           type: double
- *           description: GPA of the sudent
- *       example:
- *         fullName: Nikola Tesle
- *         gpa: 3.65
- */

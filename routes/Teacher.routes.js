@@ -1,24 +1,22 @@
 import express from "express";
-import { getTeachers, getTeacherById, createTeacher, updateTeacher, deleteTeacher, addCourseToTeacher } from "../controllers/Teacher.controller.js";
+import TeacherControllerImpl from "../controllers/Teacher.controller.js";
 
 const router = express.Router();
+const TeacherController = new TeacherControllerImpl();
 
 /**
  * @swagger
  * /teachers:
  *  get:
  *    summary: Get All Teachers
- *    tags: [Teacher]  
+ *    tags: [Teacher]    
  *    responses:
  *     200:
- *      description: Get All Teachers. 
+ *      description: Get All Teachers.
  *     500:
- *       description: Interval Server Error.
-
+ *      description: Interval Server Error.   
 */
-router.get('/teachers', getTeachers);
-
-
+router.get('/teachers', TeacherController.getTeachers);
 
 /**
  * @swagger
@@ -32,13 +30,34 @@ router.get('/teachers', getTeachers);
  *      required: true
  *   responses:
  *    200:
- *      description: Get Teacher By Id.
+ *     description: Get Teacher By Id. 
  *    404:
- *       description: Not Found.
+ *     description: Not Found.   
 */
-router.get('/teachers/:id', getTeacherById);
+router.get('/teachers/:id', TeacherController.getTeacherById);
 
 
+
+
+/**
+ * @swagger
+ * /teachers/login:
+ *  post:
+ *   summary: Login Teacher
+ *   tags: [Teacher]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/components/schemas/Teacher'
+ *   responses:
+ *    200:
+ *     description: Teacher Found. 
+ *    400:
+ *     description: Bad Ruquest.   
+*/
+router.post('/teachers/login', TeacherController.getTeacherLogin);
 
 /**
  * @swagger
@@ -54,24 +73,18 @@ router.get('/teachers/:id', getTeacherById);
  *       $ref: '#/components/schemas/Teacher'
  *   responses:
  *    201:
- *      description: Succesfully Created.
+ *     description: Teacher Created. 
  *    400:
- *       description: Bad Request.
+ *     description: Bad Ruquest.   
 */
-router.post('/teachers', createTeacher);
-
-
+router.post('/teachers', TeacherController.createTeacher);
 
 /**
  * @swagger
- * /teachers/{id}:
+ * /teachers:
  *  put:
- *   summary: Update Teacher By Id
+ *   summary: Update Teacher
  *   tags: [Teacher]
- *   parameters:
- *    - in: path
- *      name: id
- *      required: true
  *   requestBody:
  *    required: true
  *    content:
@@ -80,13 +93,11 @@ router.post('/teachers', createTeacher);
  *       $ref: '#/components/schemas/Teacher'
  *   responses:
  *    201:
- *      description: Succesfully Created.
+ *     description: Teacher Updated. 
  *    400:
- *       description: Bad Request.
+ *     description: Bad Ruquest.   
 */
-router.put('/teachers/:id', updateTeacher);
-
-
+router.put('/teachers/:id', TeacherController.updateTeacher);
 
 /**
  * @swagger
@@ -100,19 +111,17 @@ router.put('/teachers/:id', updateTeacher);
  *      required: true
  *   responses:
  *    200:
- *      description: Succesfully Deleted.
+ *     description: Teacher Deleted. 
  *    404:
- *       description: Not Found.
+ *     description: Not Found.   
 */
-router.delete('/teachers/:id', deleteTeacher);
-
-
+router.delete('/teachers/:id', TeacherController.deleteTeacher);
 
 /**
  * @swagger
  * /teachers/{id}:
  *  post:
- *   summary: Add course to the teacher
+ *   summary: Add Course to Teacher
  *   tags: [Teacher]
  *   parameters:
  *    - in: path
@@ -125,42 +134,80 @@ router.delete('/teachers/:id', deleteTeacher);
  *      schema:
  *       $ref: '#/components/schemas/Course'
  *   responses:
- *    200:
- *      description: Succesfully Added.
- *    404:
- *       description: Not Found.
+ *    201:
+ *     description: Course added to Teacher. 
+ *    400:
+ *     description: Bad Ruquest.   
 */
-router.post('/teachers/:id', addCourseToTeacher);
-
-
-export default router;
-
-/**
-  * @swagger
-  * tags:
-  *   name: Teacher
-  *   description: The Teacher managing API
-  */
+router.post('/teachers/:id', TeacherController.addCourseToTeacher);
 
 /**
  * @swagger
- * components:
- *   schemas:
- *     Teacher:
+ * /get-unassigned-teachers:
+ *  get:
+ *   summary: Get Unassigned Teachers
+ *   tags: [Teacher]
+ *   responses:
+ *    200:
+ *     description: Get Unassigned Teachers. 
+ *    400:
+ *     description: Bad Ruquest.   
+*/
+router.get('/get-unassigned-teachers', TeacherController.getUnassignTeachers);
+
+/**
+ * @swagger
+ * /assign-teachers:
+ *  post:
+ *   summary: Assign Teachers
+ *   tags: [Teacher]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
  *       type: object
- *       required:
- *         - fullName
  *       properties:
- *         id:
+ *         universityId:
  *           type: string
- *           description: Id of the teacher
- *         fullName:
+ *           description: University Id
+ *         teacherIds:
+ *           description: Teacher Id
+ *           type: array
+ *           items:
+ *             type: string
+ *              
+ *   responses:
+ *    200:
+ *     description: Assing Teachers. 
+ *    400:
+ *     description: Bad Ruquest.   
+*/
+router.post('/assign-teachers', TeacherController.assignTeachers);
+
+/**
+ * @swagger
+ * /unassign-teachers:
+ *  post:
+ *   summary: Remove Teachers
+ *   tags: [Teacher]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       type: object
+ *       properties:
+ *         teacherId:
  *           type: string
- *           description: Full name of teacher
- *         isRector:
- *           type: boolean
- *           description: Is Teacher a rector?
- *       example:   
- *         fullName: Albert Einstein
- *         isRector: 0
- */
+ *           description: Teacher Id
+ *              
+ *   responses:
+ *    200:
+ *     description: Unassign Teachers. 
+ *    400:
+ *     description: Bad Ruquest.   
+*/
+router.post('/unassign-teachers', TeacherController.unAssignTeacher);
+
+export default router;

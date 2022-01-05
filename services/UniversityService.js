@@ -1,10 +1,10 @@
 import db from '../models/Index.js';
-import { courseService, teacherService } from '../routes/routes.js';
+import { courseService, studentService, teacherService } from '../routes/routes.js';
 
 class UniversityService {
 
     university = db.University;
-  
+
     createUniversity = (university) => {
         return this.university.create(university);
     }
@@ -16,12 +16,16 @@ class UniversityService {
     getUniversityById = async (id) => {
         const university = await this.university.findByPk(id, {
             include: [
-                { model: teacherService.teacher, as: 'teachers', include: [
-                    { model: courseService.course, as: 'courses' }
-                ]}
+                {
+                    model: teacherService.teacher, as: 'teachers', include: [
+                        { model: courseService.course, as: 'courses', include: [
+                            { model: studentService.student }
+                        ] }
+                    ]
+                }
             ]
         })
-        if(university === null){
+        if (university === null) {
             throw new Error("University Not Found");
         } else {
             return university;
@@ -31,7 +35,7 @@ class UniversityService {
     addTeacherToUniversity = async (teacherId, universityId) => {
         const university = await this.university.findByPk(universityId);
         const teacher = await teacherService.teacher.findByPk(teacherId);
-        if(teacher === null){
+        if (teacher === null) {
             throw new Error("Teacher Not Found!");
         } else if (university === null) {
             throw new Error("Course Not Found!");

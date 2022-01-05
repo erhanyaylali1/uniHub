@@ -2,7 +2,8 @@ import db from '../models/Index.js';
 import { studentService } from '../routes/routes.js';
 import moment from 'moment';
 import _ from 'lodash';
-import path from "path";
+import fs from 'fs';
+
 
 class CourseService {
 
@@ -17,18 +18,11 @@ class CourseService {
     }
 
     getCourseById = async (id) => {
-        const course = await this.course.findByPk(id);
-        if(course === null){
-            throw new Error("Course Not Found");
-        } else {
-            return course;
-        }
-    }
-  
-    getStudentsByCourseId = async (id) => {
         const course = await this.course.findByPk(id, {
-            include: [ 
-                { model: studentService.student, as: 'Students' }
+            include: [
+                { model: db.Exam, as: 'exams' },
+                { model: db.Homework, as: 'homeworks' },
+                { model: db.Student, as: 'Students' }
             ]
         });
         if(course === null){
@@ -36,6 +30,38 @@ class CourseService {
         } else {
             return course;
         }
+    }
+
+    getHomeworkById = async (id) => {
+        const homework = await db.Homework.findByPk(id, {
+            include: [
+                { model: db.Course, as: 'Course' , include: [
+                    { model: db.Teacher, as: 'Teacher' },
+                    { model: db.Student, as: 'Students', include: [
+                        { model: db.Homework }
+                    ] }
+                ] },
+            ]
+        });
+        if(homework === null){
+            throw new Error("Homework Not Found");
+        } else {
+            return homework;
+        }
+    }
+
+    updateHomeworkGrades = async (homeworkId, body) => {
+        for await (const el of body){
+            await db.StudentHasHomework.update({ note: el.grade },{
+                where: { StudentId: el.id, HomeworkId: homeworkId }
+            })
+        }
+    }
+
+    updateCourse = async (id, course) => {
+        this.course.update(course, {
+            where: { id }
+        })
     }
 
     addStudentToCourse = async (courseId, studentId) => {
@@ -50,19 +76,19 @@ class CourseService {
                 throw new Error("Course Not Found!");
             }
     
-            if(course.studentNumber === course.capacity){
+            if(course.studentCount === course.capacity){
                 throw new Error("Course is full of its student capacity!");
             } else {
                 await student.addCourse(course);
                 await course.addStudent(student);
-                await course.increment('studentNumber')
+                await course.increment('studentCount')
             }
         } catch (err) {
             throw new Error(err.message);
         }
     }
 
-    addHomeworkToTheCourse = async (courseId, deadLine, homeworkName, filePath) => {
+    addHomeworkToTheCourse = async (courseId, deadLine, homeworkName, weight, filePath) => {
 
         try {
 
@@ -72,7 +98,7 @@ class CourseService {
                 throw new Error("Course Not Found");
             }
 
-            const homework = await db.Homework.create({ deadLine, homeworkName, filePath });
+            const homework = await db.Homework.create({ deadLine, homeworkName, filePath, weight });
             course.addHomework(homework);
 
         } catch (err) {
@@ -81,8 +107,50 @@ class CourseService {
 
     }
 
+    addStudentHomeworkFile = async (studentId, homeworkId, filePath) => {
+        db.StudentHasHomework.create({ StudentId: studentId, HomeworkId: homeworkId, filePath })
+    }
+
+    updateStudentHomeworkFile = async (studentId, homeworkId, filePath) => {
+        const hw = await db.StudentHasHomework.findOne({ where: { StudentId: studentId, HomeworkId: homeworkId } });
+        fs.unlink(`./uploads/Homeworks/FromStudent/${hw.filePath}`, (e) => {
+            console.log(e);
+        }); 
+        db.StudentHasHomework.update({ filePath }, { where: { StudentId: studentId, HomeworkId: homeworkId }})
+    }
+
+    updateHomework = async (id, deadLine, homeworkName, weight, filePath) => {
+
+        try {
+            const homework = {};
+            if(filePath){
+                homework.filePath = filePath;
+                const hw = await db.Homework.findByPk(id);
+                fs.unlink(`./uploads/Homeworks/FromTeacher/${hw.filePath}`, (e) => {
+                    console.log(e);
+                });                
+            }
+            if(deadLine){
+                homework.deadLine = deadLine;
+            }
+            if(homeworkName){
+                homework.homeworkName = homeworkName;
+            }
+            if(weight){
+                homework.weight = weight;
+            }
+            db.Homework.update(homework, {
+                where: { id }
+            })
+
+        } catch (err) {
+            throw new Error(err.message);
+        }
+
+    }
+
     addExamToTheCourse = async (courseId, exam, questions, files) => {
-        const examDb = await db.Exam.create({ examName: exam.examName, startDate: exam.date[0], deadLine: exam.date[1] });
+        const examDb = await db.Exam.create({ examName: exam.examName, startDate: exam.date[0], deadLine: exam.date[1], weight: exam.weight });
         let counter = 0;
         questions.map(async (el) => {
             if(el.image === null) {
@@ -98,10 +166,25 @@ class CourseService {
         course.addExam(examDb)
     }
 
+    deleteTeacherHomework = async (id) => {
+        const hw = await db.Homework.findByPk(id);
+        fs.unlink(`./uploads/Homeworks/FromTeacher/${hw.filePath}`, (e) => {
+            console.log(e);
+        }); 
+        db.Homework.update({ filePath: '' }, {
+            where: { id }
+        })
+
+    }
+
     getExamById = async (examId, date) => {
         const exam = await db.Exam.findByPk(examId, {
             include: [
-                { model: db.Question, as: 'questions'}
+                { model: db.Question, as: 'questions'},
+                { model: db.Student, as: 'Students' },
+                { model: db.Course, as: 'Course' , include: [
+                    { model: db.Student, as: 'Students' }
+                ] }
             ]
         })
 
@@ -109,10 +192,11 @@ class CourseService {
         const startDate = moment(exam.startDate, 'DD/MM/YYYY HH:mm:ss');
         const deadLine = moment(exam.deadLine, 'DD/MM/YYYY HH:mm:ss');
 
-        if(startDate < currentDate && currentDate < deadLine){
+        if(currentDate.isBetween(startDate, deadLine)){
             return exam;
         } else {
             const notAvaibleExam = {}
+            notAvaibleExam.exam = exam;
             notAvaibleExam.id = exam.id;
             notAvaibleExam.examName = exam.examName;
             notAvaibleExam.startDate = exam.startDate;
@@ -125,7 +209,6 @@ class CourseService {
     }
 
     saveExamResult = async (studentId, examId, point) => {
-        console.log(studentId, examId, point)
         const student = await studentService.getStudentById(studentId);
         const exam = await db.Exam.findByPk(examId);
         try{
@@ -140,6 +223,38 @@ class CourseService {
             
         } catch (err) {
             throw new Error(err.message);
+        }
+    }
+
+    getStudentHomework = async (studentId, homeworkId) => {
+        return await db.StudentHasHomework.findOne({ where: { StudentId: studentId, HomeworkId: homeworkId }});
+    }
+
+    updateExam = async (examId, exam, question) => {
+        
+        await db.Exam.update(exam,{
+            where: { id: examId }
+        })
+
+        for await (const [key, value] of Object.entries(question)) {
+            let question = {}
+            if(value["1"]){
+                question.choice1 = value["1"]
+            }
+            if(value["2"]){
+                question.choice2 = value["2"]
+            }
+            if(value["3"]){
+                question.choice3 = value["3"]
+            }
+            if(value["4"]){
+                question.choice4 = value["4"]
+            }
+            const obj = { ...question, ...value }
+            
+            await db.Question.update(obj, {
+                where: { id: key }
+            })
         }
     }
 }
