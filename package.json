@@ -20,7 +20,7 @@
   "homepage": "https://github.com/itusweng/group3#readme",
   "dependencies": {
     "@apidevtools/swagger-express-middleware": "^4.0.2",
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "crypto-js": "^4.1.1",

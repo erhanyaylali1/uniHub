@@ -1,6 +1,5 @@
 import db from '../models/Index.js';
-import { courseService, studentService } from '../routes/routes.js';
-import bcrypt from 'bcrypt';
+import { courseService } from '../routes/routes.js';
 import jwt from 'jsonwebtoken';
 
 class TeacherService {
@@ -26,13 +25,13 @@ class TeacherService {
     getTeacherLogin = async (where) => {
         try {
             const email = where.email;
-            const teacher = await this.teacher.findOne({where});
-            if(teacher === null){
+            const teacher = await this.teacher.findOne({ where });
+            if (teacher === null) {
                 return null;
             }
-            else{
+            else {
                 const token = await jwt.sign(
-                    { user_id: teacher.id, email},
+                    { user_id: teacher.id, email },
                     process.env.TOKEN_KEY,
                 );
                 teacher.token = token;
@@ -49,7 +48,7 @@ class TeacherService {
                 { model: courseService.course, as: 'courses' }
             ]
         });
-        if(teacher === null) {
+        if (teacher === null) {
             throw new Error("Teacher Not Found!");
         } else {
             return teacher;
@@ -73,14 +72,14 @@ class TeacherService {
             });
         } catch (err) {
             throw new Error(err.message);
-        }        
+        }
     }
-  
+
     addCourseToTheTeacher = async (courseBody, teacherId) => {
         try {
             const teacher = await this.getTeacherById(teacherId);
             const course = await courseService.createCourse(courseBody);
-            if(teacher == null) {
+            if (teacher == null) {
                 throw new Error("Teacher Not Found!");
             } else {
                 await teacher.addCourse(course);
@@ -103,7 +102,7 @@ class TeacherService {
     }
 
     assignTeachers = async (teacherIds, universityId) => {
-        try {   
+        try {
 
             for await (const teacherId of teacherIds) {
                 await this.teacher.update({ UniversityId: universityId, isAssigned: 1 }, {
@@ -125,7 +124,7 @@ class TeacherService {
                     id: teacherId
                 }
             })
-        }  catch (err) {
+        } catch (err) {
             throw new Error(err.message);
         }
     }

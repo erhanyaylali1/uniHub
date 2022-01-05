@@ -1,7 +1,5 @@
 import db from '../models/Index.js';
-import { courseService, teacherService } from '../routes/routes.js';
 import _ from 'lodash';
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 class StudentService {
 
@@ -9,7 +7,7 @@ class StudentService {
     student = db.Student;
 
     //register
-    createStudent =  async (student) => {
+    createStudent = async (student) => {
         try {
             return db.Student.create(student);
         } catch (err) {
@@ -28,12 +26,12 @@ class StudentService {
     getStudentById = async (id) => {
         const student = await this.student.findByPk(id, {
             include: [
-                { model: db.Exam},
-                { model: db.Homework},
-                { model: db.Course}
+                { model: db.Exam },
+                { model: db.Homework },
+                { model: db.Course }
             ]
         });
-        if(student === null){
+        if (student === null) {
             throw new Error("Student not found.");
         } else {
             return student;
@@ -42,14 +40,14 @@ class StudentService {
 
     getStudentLogin = async (where) => {
         try {
-            const student = await this.student.findOne({where});
+            const student = await this.student.findOne({ where });
             console.log(student);
-            if(student ===  null){
+            if (student === null) {
                 return null;
             }
-            else{
+            else {
                 const token = await jwt.sign(
-                    { id: student.id, email:student.email},
+                    { id: student.id, email: student.email },
                     process.env.TOKEN_KEY,
                 );
                 student.token = token;
@@ -69,7 +67,7 @@ class StudentService {
     }
 
     deleteStudentById = (id) => {
-        try{
+        try {
             this.student.destroy({ where: { id } });
         } catch (err) {
             throw new Error(err.message);
