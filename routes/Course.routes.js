@@ -195,7 +195,7 @@ router.put('/courses/update-homework/:id', uploadTeacherHomework.array('files'),
 /**
  * @swagger
  * /courses1/{courseId}/addHomework:
- *  get:
+ *  post:
  *   summary: Teacher Add Homework
  *   tags: [Homework]
  *   parameters:

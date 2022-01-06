@@ -1,5 +1,6 @@
 import express from "express";
 import TeacherControllerImpl from "../controllers/Teacher.controller.js";
+import verifyToken from '../middleware/authentication.js';
 
 const router = express.Router();
 const TeacherController = new TeacherControllerImpl();
@@ -58,6 +59,9 @@ router.get('/teachers/:id', TeacherController.getTeacherById);
  *     description: Bad Ruquest.   
 */
 router.post('/teachers/login', TeacherController.getTeacherLogin);
+
+
+router.get('/login-with-token', verifyToken, TeacherController.loginWithToken);
 
 /**
  * @swagger

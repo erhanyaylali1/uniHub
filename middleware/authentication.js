@@ -1,9 +1,9 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 const config = process.env;
 
-const verifyToken = (req, res, next) => {
-        
+export default function (req, res, next) {
+
     const token = req.headers["authorization"];
 
     if (!token) {
@@ -17,5 +17,3 @@ const verifyToken = (req, res, next) => {
     }
     return next();
 };
-
-module.exports = verifyToken;

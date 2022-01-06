@@ -7,7 +7,7 @@ const UniversityController = new UniversityControllerImpl();
 
 /**
  * @swagger
- * /teachers:
+ * /universities:
  *  get:
  *    summary: Get All Universities
  *    tags: [University]    
@@ -39,7 +39,7 @@ router.get('/universities/:id', UniversityController.getUniversityById);
 
 /**
  * @swagger
- * /teachers:
+ * /universities:
  *  post:
  *   summary: Create University
  *   tags: [University]
@@ -60,7 +60,7 @@ router.post('/universities', UniversityController.createUniversity);
 /**
  * @swagger
  * /universities/{universityId}/{teacherId}:
- *  get:
+ *  post:
  *   summary: Add Teacher To University
  *   tags: [University]
  *   parameters:

@@ -14,7 +14,7 @@ export default class StudentController {
             res.status(500).send(err.message);
         }
     }
-     
+
     getStudentById = async (req, res) => {
         try {
             const student = await service.getStudentById(req.params.id)
@@ -28,38 +28,39 @@ export default class StudentController {
         try {
             req.body.password = passwordToHash(req.body.password);
             service.getStudentLogin(req.body).then(async (loggedUser) => {
-                if(!loggedUser.dataValues) return res.status(200).send({error:"no user."}); 
-                else{
+                if (!loggedUser.dataValues) return res.status(200).send({ error: "no user." });
+                else {
                     const token = await jwt.sign(
-                        { id: loggedUser.id, email: loggedUser.email },
+                        { id: loggedUser.id, email: loggedUser.email, isStudent: true },
                         process.env.TOKEN_KEY
                     );
-                    return res.status(201).json({...loggedUser.dataValues, token});
+                    const { email, id } = loggedUser.dataValues
+                    return res.status(201).json({ email, id, token, isStudent: true });
                 }
             });
-        } catch (err){
+        } catch (err) {
             res.status(404).send(err.message);
         }
     }
-    
+
     createStudent = async (req, res) => {
         try {
             req.body.password = passwordToHash(req.body.password);
             service.createStudent(req.body).then(async (createdUser) => {
-                if(!createdUser.dataValues) return res.status(500).send({error:"Sorun var."}); 
-                else{
+                if (!createdUser.dataValues) return res.status(500).send({ error: "Sorun var." });
+                else {
                     const token = await jwt.sign(
                         { id: createdUser.id, email: createdUser.email },
                         process.env.TOKEN_KEY
                     );
-                    return res.status(201).json({...createdUser.dataValues, token});
+                    return res.status(201).json({ ...createdUser.dataValues, token });
                 }
             });
         } catch (err) {
             res.status(400).send(err.message);
         }
     }
-    
+
     updateStudent = async (req, res) => {
         try {
             await service.updateStudentById(req.params.id, req.body)
@@ -68,7 +69,7 @@ export default class StudentController {
             res.status(404).send(err.message);
         }
     }
-     
+
     deleteStudent = async (req, res) => {
         try {
             await service.deleteStudentById(req.params.id);
@@ -78,5 +79,4 @@ export default class StudentController {
             res.status(404).send(err.message);
         }
     }
-
 }

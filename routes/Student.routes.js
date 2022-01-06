@@ -1,5 +1,6 @@
 import express from "express";
 import StudentControllerImpl from "../controllers/Student.controller.js";
+import verifyToken from '../middleware/authentication.js';
 
 
 const router = express.Router();
@@ -10,7 +11,7 @@ const StudentController = new StudentControllerImpl();
  * /students:
  *  get:
  *    summary: Get All Students
- *    tags: [Student]    
+ *    tags: [Students]    
  *    responses:
  *     200:
  *      description: Get All Students.
@@ -24,7 +25,7 @@ router.get('/students', StudentController.getStudents);
  * /students/{id}:
  *  get:
  *   summary: Get Student By Id
- *   tags: [Student]
+ *   tags: [Students]
  *   parameters:
  *    - in: path
  *      name: id
@@ -63,7 +64,7 @@ router.post('/students/login', StudentController.getStudentLogin);
  * /students:
  *  post:
  *   summary: Create Student
- *   tags: [Student]
+ *   tags: [Students]
  *   requestBody:
  *    required: true
  *    content:
@@ -83,7 +84,7 @@ router.post('/students', StudentController.createStudent);
  * /students:
  *  put:
  *   summary: Update a Student
- *   tags: [Student]
+ *   tags: [Students]
  *   requestBody:
  *    required: true
  *    content:
@@ -103,7 +104,7 @@ router.put('/students/:id', StudentController.updateStudent);
  * /students/{id}:
  *  delete:
  *   summary: Delete Student By Id
- *   tags: [Student]
+ *   tags: [Students]
  *   parameters:
  *    - in: path
  *      name: id

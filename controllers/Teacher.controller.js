@@ -21,10 +21,11 @@ export default class TeacherController {
                 if (loggedUser == null) return res.status(200).json({ error: "no user" });
                 else {
                     const token = await jwt.sign(
-                        { id: loggedUser.id, email: loggedUser.email },
+                        { id: loggedUser.id, email: loggedUser.email, isStudent: false },
                         process.env.TOKEN_KEY
                     );
-                    return res.status(201).json({ ...loggedUser.dataValues, token });
+                    const { email, id } = loggedUser.dataValues
+                    return res.status(201).json({ email, id, token, isStudent: false });
                 }
             });
         } catch (err) {
@@ -119,6 +120,10 @@ export default class TeacherController {
         } catch (err) {
             res.status(400).send(err.message);
         }
+    }
+
+    loginWithToken = async (req, res) => {
+        res.status(200).send({ ...req.user, token: req.headers["authorization"] })
     }
 
 }
