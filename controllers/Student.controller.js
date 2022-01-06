@@ -46,16 +46,18 @@ export default class StudentController {
     createStudent = async (req, res) => {
         try {
             req.body.password = passwordToHash(req.body.password);
-            service.createStudent(req.body).then(async (createdUser) => {
-                if (!createdUser.dataValues) return res.status(500).send({ error: "Sorun var." });
-                else {
-                    const token = await jwt.sign(
-                        { id: createdUser.id, email: createdUser.email },
-                        process.env.TOKEN_KEY
-                    );
-                    return res.status(201).json({ ...createdUser.dataValues, token });
-                }
-            });
+            service.createStudent(req.body)
+                .then(async (createdUser) => {
+                    if (!createdUser.dataValues) return res.status(500).send({ error: "Sorun var." });
+                    else {
+                        const token = await jwt.sign(
+                            { id: createdUser.id, email: createdUser.email },
+                            process.env.TOKEN_KEY
+                        );
+                        return res.status(201).json({ ...createdUser.dataValues, token });
+                    }
+                })
+                .catch(err => res.status(400).send(err.message))
         } catch (err) {
             res.status(400).send(err.message);
         }
