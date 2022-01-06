@@ -1,5 +1,5 @@
 import db from '../models/Index.js';
-import { courseService, studentService } from '../routes/routes.js';
+import { courseService } from '../routes/routes.js';
 import jwt from 'jsonwebtoken';
 
 class TeacherService {

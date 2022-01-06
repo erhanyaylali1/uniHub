@@ -41,9 +41,8 @@ class StudentService {
     getStudentLogin = async (where) => {
         try {
             const student = await this.student.findOne({ where });
-            console.log(student);
             if (student === null) {
-                return null;
+                throw new Error("User Not Found");
             }
             else {
                 const token = await jwt.sign(
