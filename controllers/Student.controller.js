@@ -28,7 +28,7 @@ export default class StudentController {
         try {
             req.body.password = passwordToHash(req.body.password);
             service.getStudentLogin(req.body).then(async (loggedUser) => {
-                if (!loggedUser.dataValues) return res.status(200).send({ error: "no user." });
+                if (loggedUser === null) return res.status(200).send({ error: "no user." });
                 else {
                     const token = await jwt.sign(
                         { id: loggedUser.id, email: loggedUser.email, isStudent: true },
