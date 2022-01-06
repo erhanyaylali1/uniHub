@@ -39,17 +39,21 @@ class StudentService {
     }
 
     getStudentLogin = async (where) => {
-        const student = await this.student.findOne({ where });
-        if (student === null) {
-            throw new Error("User Not Found");
-        }
-        else {
-            const token = await jwt.sign(
-                { id: student.id, email: student.email },
-                process.env.TOKEN_KEY,
-            );
-            student.token = token;
-            return student;
+        try {
+            const student = await this.student.findOne({ where });
+            if (student === null) {
+                throw new Error("No User");
+            }
+            else {
+                const token = await jwt.sign(
+                    { id: student.id, email: student.email },
+                    process.env.TOKEN_KEY,
+                );
+                student.token = token;
+                return student;
+            }
+        } catch (err) {
+            return null;
         }
     }
 

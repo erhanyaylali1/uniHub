@@ -15,22 +15,18 @@ export default class TeacherController {
     }
 
     getTeacherLogin = async (req, res) => {
-        try {
-            req.body.password = passwordToHash(req.body.password);
-            service.getTeacherLogin(req.body).then(async (loggedUser) => {
-                if (loggedUser == null) return res.status(200).json({ error: "no user" });
-                else {
-                    const token = await jwt.sign(
-                        { id: loggedUser.id, email: loggedUser.email, isStudent: false },
-                        process.env.TOKEN_KEY
-                    );
-                    const { email, id } = loggedUser.dataValues
-                    return res.status(201).json({ email, id, token, isStudent: false });
-                }
-            });
-        } catch (err) {
-            res.status(404).send(err.message);
-        }
+        req.body.password = passwordToHash(req.body.password);
+        service.getTeacherLogin(req.body).then(async (loggedUser) => {
+            if (loggedUser == null) return res.status(200).json({ error: "no user" });
+            else {
+                const token = await jwt.sign(
+                    { id: loggedUser.id, email: loggedUser.email, isStudent: false },
+                    process.env.TOKEN_KEY
+                );
+                const { email, id } = loggedUser.dataValues
+                return res.status(201).json({ email, id, token, isStudent: false });
+            }
+        }).catch(err => res.status(200).send({ error: err.message }))
     }
 
     getTeacherById = async (req, res) => {
@@ -43,8 +39,10 @@ export default class TeacherController {
     }
 
     createTeacher = async (req, res) => {
+        console.log("geldi", req.body);
         try {
             req.body.password = passwordToHash(req.body.password);
+            console.log("object")
             service.createTeacher(req.body).then(async (createdUser) => {
                 if (!createdUser.dataValues) return res.status(500).send({ error: "Sorun var." });
                 else {

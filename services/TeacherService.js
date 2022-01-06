@@ -30,6 +30,9 @@ class TeacherService {
                 return null;
             }
             else {
+                if (teacher.dataValues.isAssigned === false) {
+                    throw new Error("User is not Assgined Yet")
+                }
                 const token = await jwt.sign(
                     { user_id: teacher.id, email },
                     process.env.TOKEN_KEY,

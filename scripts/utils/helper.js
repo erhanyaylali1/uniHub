@@ -1,6 +1,5 @@
 
 import CryptoJS from "crypto-js";
-import Jwt from "jsonwebtoken";
 
 const passwordToHash = (password) => {
 
