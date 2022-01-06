@@ -37,7 +37,7 @@ export default class StudentController {
                     const { email, id } = loggedUser.dataValues
                     return res.status(201).json({ email, id, token, isStudent: true });
                 }
-            });
+            }).catch(err => res.status(400).send(err.message))
         } catch (err) {
             res.status(404).send(err.message);
         }
@@ -57,7 +57,6 @@ export default class StudentController {
                         return res.status(201).json({ ...createdUser.dataValues, token });
                     }
                 })
-                .catch(err => res.status(400).send(err.message))
         } catch (err) {
             res.status(400).send(err.message);
         }
