@@ -61,7 +61,15 @@ export default class StudentController {
 
     updateStudent = async (req, res) => {
         try {
-            await service.updateStudentById(req.params.id, req.body)
+            req.body.password = passwordToHash(req.body.password);
+            const user = await service.getStudentById(req.params.id);
+            console.log(user);
+            if(user.dataValues.password != req.body.password){
+                return res.status(404).json({error: "Password is wrong"});
+            }
+            else{
+                await service.updateStudentById(req.params.id, req.body);
+            }
             res.status(201).json({ "message": "Student Updated" });
         } catch (err) {
             res.status(404).send(err.message);

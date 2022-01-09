@@ -39,10 +39,9 @@ export default class TeacherController {
     }
 
     createTeacher = async (req, res) => {
-        console.log("geldi", req.body);
         try {
             req.body.password = passwordToHash(req.body.password);
-            console.log("object")
+            req.body.teacherNumber = Math.floor(Math.random() * 1000000000).toString();
             service.createTeacher(req.body).then(async (createdUser) => {
                 if (!createdUser.dataValues) return res.status(500).send({ error: "Sorun var." });
                 else {
@@ -60,11 +59,14 @@ export default class TeacherController {
 
     updateTeacher = async (req, res) => {
         try {
-            await service.updateTeacherById(req.body, {
-                where: {
-                    id: req.params.id
-                }
-            });
+            req.body.password = passwordToHash(req.body.password);
+            const user = await service.getTeacherById(req.params.id);
+            if(user.password != req.body.password){
+                return res.status(404).json({error: "Password is wrong"});
+            }
+            else{
+                await service.updateTeacherById(req.params.id, req.body);
+            }
             res.status(201).json({ "message": "Teacher Updated" });
         } catch (err) {
             res.status(400).send(err.message);

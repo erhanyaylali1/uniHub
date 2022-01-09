@@ -6,7 +6,8 @@ export default class CourseController {
 
     createCourse = async (req, res) => {
         try {
-            service.createCourse(req.body);
+            const { teacherId, course } = req.body
+            await service.createCourse(teacherId, course);
             res.status(201).send("Course has created successfully!");
         } catch (err) {
             res.status(400).send(err.message);
@@ -48,7 +49,7 @@ export default class CourseController {
             res.status(404).send(err.message);
         }
     }
-    
+
     updateCourse = async (req, res) => {
         try {
             await service.updateCourse(req.params.id, req.body);
@@ -57,7 +58,7 @@ export default class CourseController {
             res.status(404).send(err.message);
         }
     }
-    
+
     addStudentToCourse = async (req, res) => {
         try {
             await service.addStudentToCourse(req.params.id, req.params.studentId);
@@ -66,7 +67,7 @@ export default class CourseController {
             res.status(404).send(err.message);
         }
     }
-    
+
     addHomeworkToTheCourse = async (req, res) => {
         try {
             const { homeworkName, deadLine, weight } = req.body
@@ -77,9 +78,9 @@ export default class CourseController {
             res.status(400).send(err.message);
         }
     }
-    
+
     addHomeworkFile = async (req, res) => {
-        try {       
+        try {
             const { studentId, homeworkId } = req.body
             const filePath = req.files[0].filename;
             await service.addHomeworkFile(studentId, homeworkId, filePath);
@@ -90,7 +91,7 @@ export default class CourseController {
     }
 
     addStudentHomeworkFile = async (req, res) => {
-        try {       
+        try {
             const { studentId, homeworkId } = req.body
             const filePath = req.files[0].filename;
             await service.addStudentHomeworkFile(studentId, homeworkId, filePath);
@@ -99,9 +100,9 @@ export default class CourseController {
             res.status(400).send(err.message)
         }
     }
-    
+
     updateStudentHomeworkFile = async (req, res) => {
-        try {       
+        try {
             const { studentId, homeworkId } = req.body
             const filePath = req.files[0].filename;
             await service.updateStudentHomeworkFile(studentId, homeworkId, filePath);
@@ -110,10 +111,10 @@ export default class CourseController {
             res.status(400).send(err.message)
         }
     }
-    
+
 
     updateHomework = async (req, res) => {
-        try {       
+        try {
             const { deadLine, homeworkName, weight } = req.body
             const filePath = req.files[0]?.filename;
             await service.updateHomework(req.params.id, deadLine, homeworkName, weight, filePath)
@@ -124,33 +125,33 @@ export default class CourseController {
     }
 
     deleteTeacherHomework = async (req, res) => {
-        try {       
+        try {
             await service.deleteTeacherHomework(req.params.id)
             res.status(201).send("Homework deleted Successfully.")
         } catch (err) {
             res.status(400).send(err.message)
         }
     }
-    
+
     addExamToCourse = async (req, res) => {
         try {
-            await service.addExamToTheCourse(req.params.courseId,JSON.parse(req.body.exam), JSON.parse(req.body.questions), req.files);
+            await service.addExamToTheCourse(req.params.courseId, JSON.parse(req.body.exam), JSON.parse(req.body.questions), req.files);
             res.status(201).send("Exam Has Successfully Created!");
         } catch (err) {
             res.status(400).send(err.message)
         }
     }
-    
-    
+
+
     getExamById = async (req, res) => {
         try {
             const result = await service.getExamById(req.params.examId, req.body.date);
-            res.status(200).send(result); 
+            res.status(200).send(result);
         } catch (err) {
             res.status(400).send(err.message);
         }
     }
-    
+
     saveExamResultById = async (req, res) => {
         try {
             await service.saveExamResult(req.body.studentId, req.body.examId, req.body.point);
@@ -173,6 +174,15 @@ export default class CourseController {
         try {
             await service.updateExam(req.params.id, req.body.exam, req.body.questions)
             res.status(201).send("Succesfully Updated");
+        } catch (err) {
+            res.status(400).send(err.message);
+        }
+    }
+
+    finishCourse = async (req, res) => {
+        try {
+            await service.finishCourse(req.params.id)
+            res.status(201).send("Course is Successfully Finished!");
         } catch (err) {
             res.status(400).send(err.message);
         }

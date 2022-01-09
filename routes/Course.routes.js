@@ -183,7 +183,7 @@ router.get('/courses/get-homework/:id', CourseController.getHomeworkById)
 */
 const storageForTeacherHomework = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, "uploads/Homeworks/FromTeacher/")
+        cb(null, "uploads/Homeworks/FromTeacher/")
     },
     filename: (req, file, cb) => {
         cb(null, crypto.randomBytes(20).toString('hex') + "-" + file.originalname);
@@ -248,12 +248,12 @@ router.post('/courses1/:courseId/addHomework', uploadTeacherHomework.array('file
  *     description: Bad Request.  
 */
 const storageForStudentHomework = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/Homeworks/FromStudent/")
-  },
-  filename: (req, file, cb) => {
-      cb(null, crypto.randomBytes(20).toString('hex') + "-" + file.originalname);
-  },
+    destination: (req, file, cb) => {
+        cb(null, "uploads/Homeworks/FromStudent/")
+    },
+    filename: (req, file, cb) => {
+        cb(null, crypto.randomBytes(20).toString('hex') + "-" + file.originalname);
+    },
 })
 const uploadStudentHomework = multer({ storage: storageForStudentHomework });
 router.post('/courses/add-students-homework', uploadStudentHomework.array('files'), CourseController.addStudentHomeworkFile);
@@ -344,10 +344,10 @@ router.delete('/courses1/:id/deleteHomework', CourseController.deleteTeacherHome
 */
 const storageForExam = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, "uploads/Exams/")
+        cb(null, "uploads/Exams/")
     },
     filename: (req, file, cb) => {
-      cb(null, crypto.randomBytes(20).toString('hex') + "-" + file.originalname.replace(" ","-"));
+        cb(null, crypto.randomBytes(20).toString('hex') + "-" + file.originalname.replace(" ", "-"));
     },
 })
 const uploadExam = multer({ storage: storageForExam });
@@ -467,6 +467,9 @@ router.put('/courses/:id', CourseController.updateCourse);
  *     description: Bad Request.  
 */
 router.put('/update-exam/:id', CourseController.updateExam);
+
+
+router.get('/finish-course/:id', CourseController.finishCourse)
 
 
 export default router;
